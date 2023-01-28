@@ -105,9 +105,9 @@ class MyBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
-              width: 100,
+              width: 80,
               child: Text(
-                "User name:",
+                "ID:",
                 textAlign: TextAlign.end,
               )),
           const SizedBox(
@@ -115,7 +115,7 @@ class MyBody extends StatelessWidget {
           ),
           // Input field
           SizedBox(
-            width: 400,
+            width: 200,
             child: TextField(controller: _userNameController),
           ),
         ],
@@ -127,9 +127,9 @@ class MyBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
-              width: 100,
+              width: 80,
               child: Text(
-                "pass:",
+                "パスワード:",
                 textAlign: TextAlign.end,
               )),
           const SizedBox(
@@ -137,7 +137,7 @@ class MyBody extends StatelessWidget {
           ),
           // Input field
           SizedBox(
-            width: 400,
+            width: 200,
             child: TextFormField(controller: _passwordController),
           ),
         ],
@@ -161,12 +161,32 @@ class MyBody extends StatelessWidget {
         );
       })),
 
+      const SizedBox(height: 8),
+
       Consumer(
         builder: (context, ref, child) {
           String s = ref.watch(pinCodeProvider);
-          return Text(s);
+          return SizedBox(
+            width: 56 * 3,
+            height: 56,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                    style: const TextStyle(
+                      fontSize: 24,
+                    ),
+                    s),
+              ),
+            ),
+          );
         },
       ),
+
+      const SizedBox(height: 8),
 
       Consumer(builder: ((context, ref, _) {
         var notifier = ref.read(pinCodeProvider.notifier);
@@ -180,6 +200,15 @@ class TenKey extends StatelessWidget {
   final List<int> keys = <int>[];
   final PinCodeNotifier pinCodeNotifier;
 
+  // Diemtions
+  static double btnPadding = 4;
+  static double btnW = 48;
+  static double btnH = 32;
+  static double btnTerritoryW = btnW + btnPadding * 2;
+  static double btnTerritoryH = btnH + btnPadding * 2;
+  static double padW = btnTerritoryW * 3;
+  static double padH = btnTerritoryH * 4;
+
   TenKey({super.key, bool random = false, required this.pinCodeNotifier}) {
     keys.clear();
     for (int i = 1; i <= 10; i++) {
@@ -191,33 +220,62 @@ class TenKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> cc = <Widget>[];
+    List<Widget> lines = <Widget>[];
+
+    int cnt = 0;
 
     for (int y = 0; y < 4; y++) {
-      List<Widget> rc = <Widget>[];
+      List<Widget> line = <Widget>[];
 
-      int e = (y == 3) ? 1 : 3;
+      for (int x = 0; x < 3 && cnt < 10; x++) {
+        int idx = cnt;
 
-      for (int x = 0; x < e; x++) {
-        int idx = y * 3 + x;
+        line.add(SizedBox(
+          width: btnTerritoryW,
+          height: btnTerritoryH,
+          child: Padding(
+            padding: EdgeInsets.all(btnPadding),
+            child: ElevatedButton(
+                onPressed: () {
+                  String s = pinCodeNotifier.getState();
+                  if (s.length < 4) {
+                    pinCodeNotifier.newState("$s${keys[idx]}");
+                  }
+                },
+                child: Text("${keys[idx]}")),
+          ),
+        ));
 
-        rc.add(ElevatedButton(
-            onPressed: () {
-              String s = pinCodeNotifier.getState();
-              if (s.length < 4) {
-                pinCodeNotifier.newState("$s${keys[idx]}");
-              }
-            },
-            child: Text("${keys[idx]}")));
+        cnt++;
       }
 
-      cc.add(Row(
-        children: rc,
+      if (cnt == 10) {
+        line.add(SizedBox(
+          width: btnTerritoryW * 2,
+          height: btnTerritoryH,
+          child: Padding(
+            padding: EdgeInsets.all(btnPadding),
+            child: ElevatedButton(
+                onPressed: () {
+                  pinCodeNotifier.newState("");
+                },
+                child: const Text("Clear")),
+          ),
+        ));
+      }
+
+      lines.add(Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: line,
       ));
     }
 
-    return Column(
-      children: cc,
+    return SizedBox(
+      width: padW,
+      height: padH,
+      child: Column(
+        children: lines,
+      ),
     );
   }
 }
