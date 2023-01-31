@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "view/register_device_page.dart";
 import "view/pincode_page.dart";
+import "constants/constants.dart";
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Test',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: LightMode.appThemeData,
       home: const MyHomePage(title: 'Riverpod Test'),
     );
   }
@@ -56,6 +55,7 @@ class MyBody extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => const RegisterDevicePage()));
           },
+          style: LightMode.buttonStyle,
           child: const Text("Register Device")),
       const SizedBox(height: 8),
       ElevatedButton(
