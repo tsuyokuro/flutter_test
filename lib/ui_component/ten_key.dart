@@ -7,8 +7,8 @@ class TenKey extends StatelessWidget {
 
   // Diemtions
   static double btnPadding = 4;
-  static double btnW = 48;
-  static double btnH = 32;
+  static double btnW = 64;
+  static double btnH = 64;
   static double btnTerritoryW = btnW + btnPadding * 2;
   static double btnTerritoryH = btnH + btnPadding * 2;
   static double padW = btnTerritoryW * 3;

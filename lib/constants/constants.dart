@@ -14,5 +14,5 @@ class LightMode {
     primarySwatch: LightMode.primarySwatch,
   );
 
-  static TextStyle basicTextStyle = TextStyle();
+  static TextStyle basicTextStyle = const TextStyle();
 }

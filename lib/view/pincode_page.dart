@@ -27,37 +27,43 @@ class PinCodePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+
     return Center(
-      child: Column(children: <Widget>[
-        const SizedBox(height: 8),
-        Consumer(
-          builder: (context, ref, child) {
-            String s = ref.watch(pinCodeNotifierProvider);
-            return SizedBox(
-              width: 56 * 3,
-              height: 56,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                      style: const TextStyle(
-                        fontSize: 24,
-                      ),
-                      s),
-                ),
-              ),
-            );
-          },
+      child: SingleChildScrollView(
+        child: SizedBox(
+          width: w,
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            Consumer(
+              builder: (context, ref, child) {
+                String s = ref.watch(pinCodeNotifierProvider);
+                return SizedBox(
+                  width: 56 * 3,
+                  height: 56,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                          style: const TextStyle(
+                            fontSize: 24,
+                          ),
+                          s),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            Consumer(builder: ((context, ref, _) {
+              var notifier = ref.read(pinCodeNotifierProvider.notifier);
+              return TenKey(pinCodeNotifier: notifier);
+            })),
+          ]),
         ),
-        const SizedBox(height: 8),
-        Consumer(builder: ((context, ref, _) {
-          var notifier = ref.read(pinCodeNotifierProvider.notifier);
-          return TenKey(pinCodeNotifier: notifier);
-        })),
-      ]),
+      ),
     );
   }
 }
