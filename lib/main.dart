@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "constants/constants.dart";
 import "router/router.dart";
+import 'view_model/my_provider.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -43,6 +45,11 @@ class MyBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    ref.listen(yyyRepositoryNotifierProvider, (prev, next) {
+      if (kDebugMode) {
+        print(next);
+      }
+    });
 
     return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -67,6 +74,13 @@ class MyBody extends ConsumerWidget {
             router.push("/List");
           },
           child: const Text("List Page")),
+      const SizedBox(height: 8),
+      ElevatedButton(
+          onPressed: () {
+            final x = ref.read(yyyRepositoryProvider);
+            x.inc();
+          },
+          child: const Text("test!")),
     ]));
   }
 }
